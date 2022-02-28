@@ -17,5 +17,15 @@ namespace BookTracker.Server.Data
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
+
+        public DbSet<Book> Books { get; set; }
+
+        public DbSet<Genre> Genres { get; set; }
+
+        public DbSet<ReadingList> ReadingLists { get; set; }
+
+
+
+
     }
 }
