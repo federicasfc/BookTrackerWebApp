@@ -19,6 +19,6 @@ namespace BookTracker.Shared.Models.Book
 
         public string Description { get; set; }
 
-        //Potentially: public List<Genre> Genres {get; set;} on User end, want to be able to check applicable genres and apply to book
+        //Potentially: public List<GenreListItem> Genres {get; set;} on User end, want to be able to check applicable genres and apply to book-- 
     }
 }

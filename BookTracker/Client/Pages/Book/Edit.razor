@@ -1,0 +1,95 @@
+﻿@page "/book/edit/{BookId:int}"
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Edit Book: @model.Title</h3>
+
+
+@if (errorMessage is null)
+{
+    <div class="container">
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label>Title</label>
+                <InputText class="form-control" @bind-Value="model.Title" />
+            </div>
+            <div class="form-group">
+                <label>Author</label>
+                <InputText class="form-control" @bind-Value="model.Author" />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <InputTextArea class="form-control" @bind-Value="model.Description" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+
+        </EditForm>
+
+    </div>
+
+
+}
+
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+
+@code {
+
+    [Parameter]
+    public int BookId { get; set; }
+
+    private BookUpdate model = new();
+
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await http.GetFromJsonAsync<BookUpdate>($"/api/book/{BookId}");
+
+    }
+
+    private async void HandleSubmit()
+    {
+        var editResult = await http.PutAsJsonAsync<BookUpdate>($"/api/book/edit/{BookId}", model);
+
+        if (editResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo($"/book/{BookId}");
+        }
+        else
+        {
+            errorMessage = "Could not edit book at this time. Please try again later.";
+        }
+    }
+
+
+
+
+}
+
+@*As added functionality in future, make it so that the list of Genres associated to book can be edited as well...maybe
+    Would require:
+    -Adding List<GenreListItem> genres to BookUpdate
+    -Adding field List<GenreListItem> genres in code block here
+    -Adding InputSelection of some sort
+    -OnInitializedAsync that gets list of genres
+
+*@
+            @*<!--
+    After some genres are created:
+    <InputSelect class="form-control" @bind-Value="model.Genres"
+    @foreach (GenreListItem genre in genres)
+    {
+    <option> @genre.Name</option>
+    }
+    </InputSelect>
+    -->*@
