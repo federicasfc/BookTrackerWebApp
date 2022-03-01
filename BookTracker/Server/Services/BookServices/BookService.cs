@@ -65,7 +65,9 @@ namespace BookTracker.Server.Services.BookServices
             return detail;
         }
 
+
         //maybe a GetBookByTitle, but not super necessary if you can just click link to book on front-end; might be more relevant, if a search feature exists
+
 
         //Create
 

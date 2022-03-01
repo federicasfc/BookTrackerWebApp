@@ -22,6 +22,10 @@ namespace BookTracker.Server.Controllers
 
         }
 
+        //Endpoints
+
+        //Gets
+
         [HttpGet]
 
         public async Task<IActionResult> Index()
@@ -43,6 +47,8 @@ namespace BookTracker.Server.Controllers
             return Ok(book);
         }
 
+        //Create
+
         [HttpPost]
 
         public async Task<IActionResult> Create(BookCreate model)
@@ -56,6 +62,8 @@ namespace BookTracker.Server.Controllers
             return Ok("Book created successfully");
 
         }
+
+        //Update
 
         [HttpPut("edit/{id}")]
 
@@ -74,6 +82,8 @@ namespace BookTracker.Server.Controllers
 
 
         }
+
+        //Delete
 
         [HttpDelete("delete/{id}")]
 
