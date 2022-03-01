@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BookTracker.Shared.Models.Genre
 {
-    public class GenreEdit
+    public class GenreUpdate
     {
         [Required]
         public int Id { get; set; }
