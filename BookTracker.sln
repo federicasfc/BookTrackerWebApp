@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Server", "BookTracker\Server\BookTracker.Server.csproj", "{6F4DA2FF-EC0B-451D-A280-010B05DB3937}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookTracker.Server", "BookTracker\Server\BookTracker.Server.csproj", "{6F4DA2FF-EC0B-451D-A280-010B05DB3937}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Client", "BookTracker\Client\BookTracker.Client.csproj", "{5C4C3D55-891D-421B-9D19-4860A350278A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookTracker.Client", "BookTracker\Client\BookTracker.Client.csproj", "{5C4C3D55-891D-421B-9D19-4860A350278A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookTracker.Shared", "BookTracker\Shared\BookTracker.Shared.csproj", "{E3401E6A-5C29-4F19-991D-69EEC3CC65A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookTracker.Shared", "BookTracker\Shared\BookTracker.Shared.csproj", "{E3401E6A-5C29-4F19-991D-69EEC3CC65A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

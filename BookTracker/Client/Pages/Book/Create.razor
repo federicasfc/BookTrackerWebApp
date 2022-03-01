@@ -1,0 +1,91 @@
+﻿@page "/book/create"
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Create a Book</h3>
+
+@if (errorMessage is null)
+{
+    <div class="container">
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label>Title</label>
+                <InputText class="form-control" @bind-Value="model.Title" />
+            </div>
+            <div class="form-group">
+                <label>Author</label>
+                <InputText class="form-control" @bind-Value="model.Author" />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <InputTextArea class="form-control" @bind-Value="model.Description" />
+            </div>
+
+            @*<!--
+                After some genres are created:
+               <InputSelect class="form-control" @bind-Value="model.Genres"
+                   @foreach (GenreListItem genre in genres)
+                   {
+                   <option> @genre.Name</option>
+                   }
+                </InputSelect>
+            -->*@
+
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+
+        </EditForm>
+
+    </div>
+
+
+}
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@code {
+
+    private BookCreate model = new();
+
+    //private List<GenreListItem> genres;
+
+    private string errorMessage;
+
+    /*
+     * protected override async Task OnInitialized()
+     * {
+     *      genres = await http.GetFromJsonAsync<IEnumerable<GenreListItem>>("/api/genre/");
+     * }
+     */
+
+    private async void HandleSubmit()
+    {
+        var createResult = await http.PostAsJsonAsync<BookCreate>("/api/book/create", model);
+
+        if (createResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/book");
+
+        }
+        else
+        {
+            errorMessage = "Could not create book at this time. Please try again later.";
+
+        }
+
+    }
+
+}
+    @*<!--After some genres are created:
+                Add a checkbox function that allows users to click on applicable genres;
+                -InputSelect will need to be added
+                -List<GenreListItem> genres field will need to be added in code section
+                -List<GenreListItem> will have to be added as prop in BookCreate model
+                -OnInitializedAsync will have to get genres list
+            --> *@

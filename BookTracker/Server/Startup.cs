@@ -1,5 +1,7 @@
 using BookTracker.Server.Data;
 using BookTracker.Server.Models;
+using BookTracker.Server.Services.BookServices;
+using BookTracker.Server.Services.GenreServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,6 +31,9 @@ namespace BookTracker.Server
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IGenreService, GenreService>();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
