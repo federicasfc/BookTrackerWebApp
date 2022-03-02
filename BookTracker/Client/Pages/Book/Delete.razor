@@ -1,0 +1,114 @@
+﻿@page "/book/delete/{BookId:int}"
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+
+<h3>Delete</h3>
+
+@if(errorMessage != null)
+{
+    <h2 class="text-danger">@errorMessage</h2>
+}
+
+@if(book != null)
+{
+      <div class="container">
+        <dl class="row">
+         <dt class = "col-sm-2">
+            <span>Book Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Id</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Title:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Title</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Author:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Author</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Description:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Description</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Genres:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            @if(listCount > 0)
+                {
+                    
+                @foreach(var genre in @book.Genres)
+                {
+                <span>@genre.Name</span>
+                    
+                    }
+                }
+                else
+                {
+                    <span>No genres listed</span>
+                }
+        </dd>
+            
+        </dl>
+
+        <div class="d-flex justify-content-center mt-3">
+            <div class="text-center justify-content-between w-50">
+                <p>Are you sure you want to delete Book @book.Title?</p>
+                <a href="#" @onclick="HandleClick" class="btn btn-danger text-white">Delete Book</a>
+                <a href=@($"/book") class="btn btn-outline-primary">Back to Book Index</a>
+            </div>
+        </div>
+    </div>
+    
+}
+else
+{
+    <p>Book not found</p>
+}
+
+
+@code {
+
+
+    [Parameter]
+    public int BookId { get; set; }
+
+    private BookDetail book = new();
+
+    private int listCount;
+
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        book = await http.GetFromJsonAsync<BookDetail>($"/api/book/{BookId}");
+
+        listCount = book.Genres.Count();
+
+    }
+
+    private async void HandleClick()
+    {
+        var deleteResult = await http.DeleteAsync($"/api/book/delete/{BookId}");
+
+        if(deleteResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/book");
+        }
+        else
+        {
+            errorMessage = "Failed to delete book at this time.";
+        }
+    }
+
+}

@@ -43,7 +43,7 @@ namespace BookTracker.Server.Services.BookServices
         public async Task<BookDetail> GetBookByIdAsync(int id)
         {
             var bookEntity = await _context.Books
-                .Include(nameof(Genre))
+                .Include(b => b.Genres)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             if (bookEntity == null)
@@ -51,6 +51,7 @@ namespace BookTracker.Server.Services.BookServices
 
             var detail = new BookDetail()
             {
+                Id = bookEntity.Id,
                 Title = bookEntity.Title,
                 Author = bookEntity.Author,
                 Description = bookEntity.Description,

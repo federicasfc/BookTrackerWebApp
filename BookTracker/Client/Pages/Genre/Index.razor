@@ -1,0 +1,53 @@
+﻿@page "/genre"
+@using BookTracker.Shared.Models.Genre
+@inject HttpClient http
+@attribute [Authorize]
+
+
+<h3>Genres</h3>
+
+<a href="/genre/create">Create a Genre</a>
+
+
+@if(genres != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(GenreListItem genre in genres)
+            {
+            <tr>
+                <td>@genre.Id</td>
+                <td>@genre.Name</td>
+                <td>
+                    <a href=@($"genre/{genre.Id}")>Details</a>
+                    <a href=@($"genre/edit/{genre.Id}")>Edit</a>
+                    <a href=@($"genre/delete/{genre.Id}")>Delete</a>
+                </td>
+            </tr>
+                
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No genres found</p>
+}
+
+
+
+@code {
+    private List<GenreListItem> genres;
+
+    protected override async Task OnInitializedAsync()
+    {
+        genres = await http.GetFromJsonAsync<List<GenreListItem>>("api/genre");
+    }
+
+}

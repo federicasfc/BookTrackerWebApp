@@ -53,6 +53,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        //This isn't working for some reason, may have to do with Detail view not existing yet?
         model = await http.GetFromJsonAsync<BookUpdate>($"/api/book/{BookId}");
 
     }

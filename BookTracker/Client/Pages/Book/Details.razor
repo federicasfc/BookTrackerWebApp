@@ -1,0 +1,99 @@
+﻿@page "/book/{BookId:int}"
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+
+
+<h3>@book.Title</h3>
+
+
+@if (book != null)
+{
+    <div class="container">
+        <dl class="row">
+         <dt class = "col-sm-2">
+            <span>Book Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Id</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Title:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Title</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Author:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Author</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Description:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@book.Description</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Genres:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            @if(listCount > 0)
+                {
+                    
+                @foreach(var genre in @book.Genres)
+                {
+                <span>@genre.Name</span>
+                    
+                    }
+                }
+                else
+                {
+                    <span>No genres listed</span>
+                }
+        </dd>
+            
+        </dl>
+
+        <div class="d-flex justify-content-center mt-3">
+            <div class="text-center justify-content-between w-25">
+                <a href=@($"/book/edit/{BookId}") class="btn btn-outline-primary">Edit</a>
+                <a href=@($"/book/delete/{BookId}") class="btn btn-outline-danger">Delete</a>
+                <hr/>
+                <a href="/book">Back to Book Index</a>
+            </div>
+
+        </div>
+
+
+    </div>
+
+}
+else
+{
+    <p>Loading...</p>
+}
+
+
+@code {
+
+    [Parameter]
+
+    public int BookId { get; set; }
+
+    private BookDetail book = new();
+
+    private int listCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        book = await http.GetFromJsonAsync<BookDetail>($"/api/book/{BookId}");
+
+        listCount = book.Genres.Count();
+    }
+    @* added listCount because html did not like .Count method or prop; could also just do null check(iffy); could also write whole new method for checking list count *@
+
+}
