@@ -97,7 +97,7 @@ namespace BookTracker.Server.Services.BookServices
             if (model.Id != id)
                 return false;
 
-            var bookEntity = await _context.Books.FindAsync(id);
+            var bookEntity = await _context.Books.Include(b => b.Genres).FirstOrDefaultAsync(b => b.Id == id);
 
             if (bookEntity is null)
                 return false;
@@ -106,6 +106,11 @@ namespace BookTracker.Server.Services.BookServices
             bookEntity.Title = model.Title;
             bookEntity.Author = model.Author;   
             bookEntity.Description = model.Description;
+            bookEntity.Genres = model.Genres.Select(g => new Genre()
+            {
+                Id = g.Id,
+                Name = g.Name
+            }).ToList();
 
             return await _context.SaveChangesAsync() == 1;
 

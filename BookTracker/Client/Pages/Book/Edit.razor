@@ -1,5 +1,6 @@
 ﻿@page "/book/edit/{BookId:int}"
 @using BookTracker.Shared.Models.Book
+@using BookTracker.Shared.Models.Genre
 @inject HttpClient http
 @inject NavigationManager navigation
 @attribute [Authorize]
@@ -25,6 +26,17 @@
                 <label>Description</label>
                 <InputTextArea class="form-control" @bind-Value="model.Description" />
             </div>
+            <div class="form-group">
+                <label>Genres</label>
+                <InputCheckbox class="form-control" @bind-Value="model.Genres"> @*Won't let me use this because of list probably?? May need a foreach, but I'm not sure where*@
+                    @foreach (GenreListItem genre in genres)
+                    {
+                    <option value="@genre.Id">@genre.Name</option>
+                    }
+                </InputCheckbox>
+            </div>
+
+            
 
             <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
 
@@ -49,12 +61,16 @@ else
 
     private BookUpdate model = new();
 
+    private List<GenreListItem> genres;
+
     private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
         //This isn't working for some reason, may have to do with Detail view not existing yet?
         model = await http.GetFromJsonAsync<BookUpdate>($"/api/book/{BookId}");
+
+        genres = await http.GetFromJsonAsync<List<GenreListItem>>("/api/genre");
 
     }
 
