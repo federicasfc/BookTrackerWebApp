@@ -1,0 +1,55 @@
+﻿@page "/genre/create"
+@using BookTracker.Shared.Models.Genre
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Create a Genre</h3>
+
+
+@if (errorMessage == null)
+{
+    <div class="container">
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator/>
+            <ValidationSummary/>
+            <div class="form-group">
+                <label>Name</label>
+                <InputText class="form-control" @bind-Value="model.Name"/>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+        </EditForm>
+    </div>
+}
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+
+@code
+{
+    private GenreCreate model = new();
+
+    private string errorMessage;
+
+    private async void HandleSubmit()
+    {
+        var createResult = await http.PostAsJsonAsync<GenreCreate>("/api/genre/create", model);
+
+        if (createResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/genre");
+        }
+        else
+        {
+            errorMessage = "Could not create genre at this time. Please try again later.";
+        }
+
+    }
+
+
+
+}

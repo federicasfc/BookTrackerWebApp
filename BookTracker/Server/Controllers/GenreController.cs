@@ -69,7 +69,7 @@ namespace BookTracker.Server.Controllers
 
         //Create
 
-        [HttpPost]
+        [HttpPost("create")]
 
         public async Task<IActionResult> Create(GenreCreate model)
         {
