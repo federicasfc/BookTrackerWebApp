@@ -28,12 +28,17 @@
             </div>
             <div class="form-group">
                 <label>Genres</label>
-                <InputCheckbox class="form-control" @bind-Value="model.Genres"> @*Won't let me use this because of list probably?? May need a foreach, but I'm not sure where*@
+                    @foreach(GenreListItem genre in model.Genres)
+                {
+
+                <InputCheckbox class="form-control" @onchange ="eventArgs => {CheckBoxClicked(genre.Id, eventArgs.Value); }"> @*Source for possible solution: https://blazor-tutorial.net/knowledge-base/51234654/-net-core-blazor--how-to-get-the-checkbox-value-if-it-is-checked-*@
                     @foreach (GenreListItem genre in genres)
                     {
                     <option value="@genre.Id">@genre.Name</option>
                     }
                 </InputCheckbox>
+                    
+                }
             </div>
 
             
@@ -109,4 +114,14 @@ else
     <option> @genre.Name</option>
     }
     </InputSelect>
-    -->*@
+
+     <InputCheckbox class="form-control" @bind-Value="model.Genres"> @*Won't let me use this because of list probably?? May need a foreach, but I'm not sure where*@
+                  @* Original code under Label 
+                  @foreach (GenreListItem genre in genres)
+                    {
+                    <option value="@genre.Id">@genre.Name</option>
+                    }
+                </InputCheckbox>
+
+                  *@ 
+
