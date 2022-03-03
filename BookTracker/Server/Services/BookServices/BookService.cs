@@ -106,12 +106,18 @@ namespace BookTracker.Server.Services.BookServices
             bookEntity.Title = model.Title;
             bookEntity.Author = model.Author;   
             bookEntity.Description = model.Description;
+           /*
+            foreach (Genre genre in bookEntity.Genres) //might be mad because no genres are currently associated??
+            {
+                _context.Genres.Find(g => g.Id == id).ToList().Add(genre);
+            }
             bookEntity.Genres = model.Genres.Select(g => new Genre()
             {
                 Id = g.Id,
                 Name = g.Name
             }).ToList();
-
+            //foreach bookentity.Genres use some type of Linq query (find) model.Genres and add them with   .Add
+           */
             return await _context.SaveChangesAsync() == 1;
 
            
@@ -133,3 +139,11 @@ namespace BookTracker.Server.Services.BookServices
         }
     }
 }
+/*
+ * bookEntity.Genres = model.Genres.Select(g => new Genre()
+            {
+                Id = g.Id,
+                Name = g.Name
+            }).ToList();
+ * 
+ */
