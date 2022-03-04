@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BookTracker.Shared.Models.List;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BookTracker.Server.Models
 {
-    public enum Format { Physical = 1, Ebook, Audiobook }
+    //public enum Format { Physical = 1, Ebook, Audiobook }
     public class AcquiredList : ReadingList
 
     {

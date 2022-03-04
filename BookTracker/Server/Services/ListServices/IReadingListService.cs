@@ -1,20 +1,29 @@
-﻿namespace BookTracker.Server.Services.ListServices
+﻿using BookTracker.Shared.Models.List.ReadingList;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace BookTracker.Server.Services.ListServices
 {
     public interface IReadingListService
     {
-        //GetReadingList (requires ReadingListListItem...?)
-        //CreateReadingList(ReadingListCreate model)
-        //EditReadingList(int id, ReadingListEdit model)
-        
+        Task<IEnumerable<ReadingListListItem>> GetReadingListAsync();
 
-        //Don't know that I want to be able to delete whole lists, just remove books from them
-        //DeleteReadingList(requires ReadingListDetail model)
+        Task<ReadingListDetail> GetReadingListItemById(int id);
+
+        Task<bool> CreateReadingListItemAsync(ReadingListCreate model);
+
+        Task<bool> DeleteReadingListItemAsync(int id);
+
+
+
+
+       
         
 
         //GetAcquiredList
         //CreateAcquiredList (AcquiredListCreate model)
         //EditAcquiredList (AcquiredListEdit model)
-        //Delete
+        //MoveBookFromReadingListToAcquiredList (some type of update method, would have to take in an id of the existing list and add extra props?)
 
     }
 }
