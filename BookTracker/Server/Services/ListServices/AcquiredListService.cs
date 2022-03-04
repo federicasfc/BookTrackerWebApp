@@ -90,8 +90,8 @@ namespace BookTracker.Server.Services.ListServices
             if (model.Id != id)
                 return false;
 
-            var acquiredListItem = await _context.AcquiredLists.FindAsync(id);
-                .
+            var acquiredListItem = await _context.AcquiredLists.FindAsync(id); 
+                
             if (acquiredListItem?.UserId != _userId)
                 return false;
 
@@ -103,26 +103,38 @@ namespace BookTracker.Server.Services.ListServices
 
 
         }
-        /*
-        public async Task<bool> AddToAcquiredList(int id, AcquiredListEdit model)
+
+        public async Task<bool> AddToAcquiredListAsync(int id, AcquiredListEdit model)
         {
             if (model.Id != id)
                 return false;
 
-            var acquiredListItem = await _context.ReadingLists.FindAsync(id);
-                .
-            if (acquiredListItem?.UserId != _userId)
+            var readingListItem = await _context.ReadingLists.FindAsync(id); 
+                
+            if (readingListItem?.UserId != _userId)
                 return false;
+            var acquiredListItem = new AcquiredList()
+            {
+                Id = readingListItem.Id,
+                BookId = readingListItem.BookId,
+                AddedUtc = readingListItem.AddedUtc,
+                UserId = _userId,
+                AcquiredUtc = model.AcquiredUtc,
+                Format = model.Format,
+                HowAcquired = model.HowAcquired
 
-            acquiredListItem.AcquiredUtc = model.AcquiredUtc;
-            acquiredListItem.Format = model.Format;
-            acquiredListItem.HowAcquired = model.HowAcquired;
+            };
 
-            return await _context.SaveChangesAsync() == 1;
+            _context.ReadingLists.Remove(readingListItem);
+            _context.AcquiredLists.Add(acquiredListItem);
+
+
+
+            return await _context.SaveChangesAsync() == 2;
 
             //might be more complicated: may have to create a new AcquiredList and then remove the readingListItem from ReadingList
         }
-        */
+        
         //Delete
         public async Task<bool> DeleteAcquiredListItemAsync(int id)
         {

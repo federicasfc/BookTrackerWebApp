@@ -6,15 +6,17 @@ namespace BookTracker.Server.Services.ListServices
 {
     public interface IAcquiredListService
     {
-        Task<IEnumerable<AcquiredListListItem>> GetAcquiredList();
+        Task<IEnumerable<AcquiredListListItem>> GetAcquiredListAsync();
 
-        Task<AcquiredListDetail> GetAcquiredListItemById(int id);
+        Task<AcquiredListDetail> GetAcquiredListItemByIdAsync(int id);
 
-        Task<bool> CreateAcquiredListItem(AcquiredListCreate model);
+        Task<bool> CreateAcquiredListItemAsync(AcquiredListCreate model);
 
         //potentially could work both for editing something on the acquired list and for transferring from reading list to acquired? Might need two separate ones
-        Task<bool> UpdateAcquiredList(int id, AcquiredListEdit model);
+        Task<bool> UpdateAcquiredListItemAsync(int id, AcquiredListEdit model);
 
-        Task<bool> DeleteAcquiredListItem(int id);
+        Task<bool> AddToAcquiredListAsync(int id, AcquiredListEdit model);
+
+        Task<bool> DeleteAcquiredListItemAsync(int id);
     }
 }
