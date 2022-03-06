@@ -14,11 +14,13 @@ namespace BookTracker.Server.Services.ListServices
 
         Task<bool> DeleteReadingListItemAsync(int id);
 
+        void SetUserId(string userId);
 
 
 
-       
-        
+
+
+
 
         //GetAcquiredList
         //CreateAcquiredList (AcquiredListCreate model)
