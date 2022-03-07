@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\List\AcquiredList\" />
     <Folder Include="Pages\List\ReadList\" />
   </ItemGroup>
 

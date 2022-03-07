@@ -9,9 +9,16 @@ namespace BookTracker.Shared.Models.List.AcquiredList
 {
     public class AcquiredListEdit
     {
-        [Required]
+        
 
         public int Id { get; set; }
+
+        
+
+        public string BookTitle { get; set; }
+
+        
+        public DateTimeOffset AddedUtc { get; set; }
 
         [Required]
         public DateTimeOffset AcquiredUtc { get; set; }

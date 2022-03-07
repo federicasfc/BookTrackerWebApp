@@ -1,0 +1,52 @@
+﻿@page "/acquiredlist"
+@using BookTracker.Shared.Models.List.AcquiredList
+@inject HttpClient http
+@attribute [Authorize]
+
+
+<h3>Acquired List</h3>
+
+<a href="/acquiredlist/add">Add Book to Acquired List</a>
+
+@if(acquiredList != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Book Title</th>
+                <th>Format</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(AcquiredListListItem item in acquiredList)
+            {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.BookTitle</td>
+                <td>@item.Format</td>
+                <td>
+                    <a href=@($"acquiredlist/{item.Id}")>Details</a>
+                    <a href=@($"acquiredlist/edit/{item.Id}")>Edit</a> 
+                    <a href=@($"acquiredlist/remove/{item.Id}")>Remove</a>
+                </td>
+            </tr>    
+            }
+        </tbody>
+    </table>
+    
+}
+else
+{
+    <p><em>Loading...</em></p>
+
+}
+
+@code {
+    private List<AcquiredListListItem> acquiredList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        acquiredList = await http.GetFromJsonAsync<List<AcquiredListListItem>>("api/acquiredlist");
+    }
+}

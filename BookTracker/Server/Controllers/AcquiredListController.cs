@@ -31,6 +31,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var acquiredList = await _acquiredListService.GetAcquiredListAsync();
 
             return Ok(acquiredList);
@@ -40,6 +43,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> ListItem(int id)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var acquiredListItem = await _acquiredListService.GetAcquiredListItemByIdAsync(id);
 
             if (acquiredListItem is null)
@@ -57,6 +63,9 @@ namespace BookTracker.Server.Controllers
             if (!ModelState.IsValid || model is null)
                 return BadRequest(ModelState);
 
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             if (!await _acquiredListService.CreateAcquiredListItemAsync(model))
                 return UnprocessableEntity();
 
@@ -68,6 +77,9 @@ namespace BookTracker.Server.Controllers
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> Edit(int id, AcquiredListEdit model)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             if (!ModelState.IsValid || model == null)
                 return BadRequest(ModelState);
 
@@ -87,6 +99,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> AddFromReadingList(int id, AcquiredListEdit model)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             if (!ModelState.IsValid || model is null)
                 return BadRequest(ModelState);
 
@@ -106,6 +121,9 @@ namespace BookTracker.Server.Controllers
         [HttpDelete("remove/{id}")]
         public async Task<IActionResult> Remove(int id) //maybe delete
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var acquiredListItem = await _acquiredListService.GetAcquiredListItemByIdAsync(id);
 
             if (acquiredListItem is null)

@@ -95,6 +95,12 @@ namespace BookTracker.Server.Services.ListServices
             if (acquiredListItem?.UserId != _userId)
                 return false;
 
+            //added for display purposes; not sure if correct
+            //acquiredListItem.AddedUtc = model.AddedUtc;
+            //acquiredListItem.Id = model.Id;
+            //acquiredListItem.Book.Title = model.BookTitle;
+
+            //original ones
             acquiredListItem.AcquiredUtc = model.AcquiredUtc;
             acquiredListItem.Format = model.Format;
             acquiredListItem.HowAcquired = model.HowAcquired;

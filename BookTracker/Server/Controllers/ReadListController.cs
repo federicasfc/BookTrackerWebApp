@@ -32,6 +32,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var readList = await _readListService.GetReadListAsync();
 
             return Ok(readList);
@@ -41,6 +44,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> ListItem(int id)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var readListItem = await _readListService.GetReadListItemByIdAsync(id);
 
             if (readListItem is null)
@@ -55,6 +61,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> Add(ReadListCreate model) //maybe create
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             if (!ModelState.IsValid || model is null)
                 return BadRequest(ModelState);
 
@@ -69,6 +78,9 @@ namespace BookTracker.Server.Controllers
         [HttpPut("edit/{id}")]
         public async Task<IActionResult> Edit(int id, ReadListEdit model)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             if (!ModelState.IsValid || model == null)
                 return BadRequest(ModelState);
 
@@ -88,6 +100,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> AddFromAcquiredList(int id, ReadListFromAcquiredEdit model)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             if (!ModelState.IsValid || model is null)
                 return BadRequest(ModelState);
 
@@ -109,6 +124,9 @@ namespace BookTracker.Server.Controllers
         [HttpDelete("remove/{id}")]
         public async Task<IActionResult> Remove(int id) //maybe delete
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var readListItem = await _readListService.GetReadListItemByIdAsync(id);
 
             if (readListItem is null)

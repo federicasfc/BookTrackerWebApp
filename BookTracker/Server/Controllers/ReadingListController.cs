@@ -32,6 +32,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var readingList = await  _readingListService.GetReadingListAsync();
 
             return Ok(readingList);
@@ -41,6 +44,9 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> ListItem(int id)
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var readingListItem = await _readingListService.GetReadingListItemByIdAsync(id);
 
             if(readingListItem is null)
@@ -55,7 +61,10 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> Add(ReadingListCreate model) //maybe create
         {
-            if(!ModelState.IsValid || model is null)
+            if (!SetUserIdInService())
+                return Unauthorized();
+
+            if (!ModelState.IsValid || model is null)
                 return BadRequest(ModelState);
 
             if (!await _readingListService.CreateReadingListItemAsync(model))
@@ -70,6 +79,9 @@ namespace BookTracker.Server.Controllers
         [HttpDelete("remove/{id}")]
         public async Task<IActionResult> Remove(int id) //maybe delete
         {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
             var readingListItem = await _readingListService.GetReadingListItemByIdAsync(id);
 
             if (readingListItem is null)
