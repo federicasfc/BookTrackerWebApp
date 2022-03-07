@@ -8,7 +8,7 @@ namespace BookTracker.Server.Services.ListServices
     {
         Task<IEnumerable<ReadingListListItem>> GetReadingListAsync();
 
-        Task<ReadingListDetail> GetReadingListItemById(int id);
+        Task<ReadingListDetail> GetReadingListItemByIdAsync(int id);
 
         Task<bool> CreateReadingListItemAsync(ReadingListCreate model);
 

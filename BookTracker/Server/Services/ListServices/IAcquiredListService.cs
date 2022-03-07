@@ -15,7 +15,7 @@ namespace BookTracker.Server.Services.ListServices
         //potentially could work both for editing something on the acquired list and for transferring from reading list to acquired? Might need two separate ones
         Task<bool> UpdateAcquiredListItemAsync(int id, AcquiredListEdit model);
 
-        Task<bool> AddToAcquiredListAsync(int id, AcquiredListEdit model);
+        Task<bool> AddToAcquiredListFromReadingAsync(int id, AcquiredListEdit model);
 
         Task<bool> DeleteAcquiredListItemAsync(int id);
 

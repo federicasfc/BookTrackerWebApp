@@ -45,7 +45,7 @@ namespace BookTracker.Server.Services.ListServices
             
         }
 
-        public async Task<ReadingListDetail> GetReadingListItemById(int id)
+        public async Task<ReadingListDetail> GetReadingListItemByIdAsync(int id)
         {
             var readingListItem = await _context.ReadingLists
                 .Include(l => l.Book)

@@ -104,7 +104,7 @@ namespace BookTracker.Server.Services.ListServices
 
         }
 
-        public async Task<bool> AddToAcquiredListAsync(int id, AcquiredListEdit model)
+        public async Task<bool> AddToAcquiredListFromReadingAsync(int id, AcquiredListEdit model)
         {
             if (model.Id != id)
                 return false;

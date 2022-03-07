@@ -41,7 +41,7 @@ namespace BookTracker.Server.Controllers
 
         public async Task<IActionResult> ListItem(int id)
         {
-            var readingListItem = await _readingListService.GetReadingListItemById(id);
+            var readingListItem = await _readingListService.GetReadingListItemByIdAsync(id);
 
             if(readingListItem is null)
                 return NotFound();
@@ -67,10 +67,10 @@ namespace BookTracker.Server.Controllers
 
         //Delete
 
-        [HttpDelete("{id}")]
+        [HttpDelete("remove/{id}")]
         public async Task<IActionResult> Remove(int id) //maybe delete
         {
-            var readingListItem = await _readingListService.GetReadingListItemById(id);
+            var readingListItem = await _readingListService.GetReadingListItemByIdAsync(id);
 
             if (readingListItem is null)
                 return NotFound();
