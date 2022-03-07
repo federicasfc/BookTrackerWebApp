@@ -1,0 +1,96 @@
+﻿@page "/readinglist/remove/{ListItemId:int}"
+@using BookTracker.Shared.Models.List.ReadingList
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Remove From Reading List</h3>
+
+@if(errorMessage != null)
+{
+    <h2 class="text-danger">@errorMessage</h2>
+}
+
+@if(listItem != null)
+{
+      <div class="container">
+        <dl class="row">
+         <dt class = "col-sm-2">
+            <span>List Item Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.Id</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Book Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.BookId</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Book Title:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.BookTitle</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Date Added:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.AddedUtc</span>
+        </dd>
+            
+        </dl>
+
+        <div class="d-flex justify-content-center mt-3">
+            <div class="text-center justify-content-between w-50">
+                <p>Are you sure you want to remove @listItem.BookTitle from Reading List?</p>
+                <a href="#" @onclick="HandleClick" class="btn btn-danger text-white">Remove Book</a>
+                <a href=@($"/readinglist") class="btn btn-outline-primary">Back to Reading List</a>
+            </div>
+        </div>
+    </div>
+    
+}
+else
+{
+    <p>Item not found</p>
+}
+
+
+@code {
+
+
+    [Parameter]
+    public int ListItemId { get; set; }
+
+    private ReadingListDetail listItem = new();
+
+    
+
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listItem = await http.GetFromJsonAsync<ReadingListDetail>($"/api/readinglist/{ListItemId}");
+
+        
+
+    }
+
+    private async void HandleClick()
+    {
+        var removeResult = await http.DeleteAsync($"/api/readinglist/remove/{ListItemId}");
+
+        if(removeResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/readinglist");
+        }
+        else
+        {
+            errorMessage = "Failed to remove book at this time.";
+        }
+    }
+
+}
+
