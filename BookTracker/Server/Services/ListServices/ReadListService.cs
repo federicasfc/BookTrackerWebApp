@@ -114,6 +114,42 @@ namespace BookTracker.Server.Services.ListServices
             return await _context.SaveChangesAsync() == 1;
         }
 
+        //AddToReadFromReading
+
+        public async Task<bool> AddToReadListFromReadingAsync(int id, ReadListEdit model)
+        {
+            if (model.Id != id)
+                return false;
+
+            var readingListItem = await _context.ReadingLists.FindAsync(id);
+
+            if (readingListItem?.UserId != _userId)
+                return false;
+            var readListItem = new ReadList()
+            {
+                Id = readingListItem.Id,
+                BookId = readingListItem.BookId,
+                AddedUtc = readingListItem.AddedUtc,
+                UserId = _userId,
+                AcquiredUtc = model.AcquiredUtc,
+                Format = model.Format,
+                HowAcquired = model.HowAcquired,
+                StartedUtc = model.StartedUtc,
+                IsFinished = model.IsFinished,
+                Review = model.Review
+
+            };
+
+            _context.ReadingLists.Remove(readingListItem);
+            _context.ReadLists.Add(readListItem);
+
+
+
+            return await _context.SaveChangesAsync() >= 1;
+
+            
+        }
+
         //AddToReadFromAcquiredList
         public async Task<bool> AddToReadListFromAcquiredAsync(int id, ReadListFromAcquiredEdit model)
         {
@@ -140,16 +176,16 @@ namespace BookTracker.Server.Services.ListServices
 
             };
 
-            _context.ReadingLists.Remove(acquiredListItem);
-            _context.AcquiredLists.Add(readListItem);
+            _context.AcquiredLists.Remove(acquiredListItem);
+            _context.ReadLists.Add(readListItem);
 
 
 
-            return await _context.SaveChangesAsync() == 2;
+            return await _context.SaveChangesAsync() >= 1;
 
         }
 
-        //Probably will need a separate AddToReadListFromReading because of where querying (could also potentially explore and include somewhere?)
+        
 
         //Delete
         public async Task<bool> DeleteReadListItemAsync(int id)

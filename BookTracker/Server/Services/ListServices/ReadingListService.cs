@@ -33,7 +33,7 @@ namespace BookTracker.Server.Services.ListServices
         public async Task<IEnumerable<ReadingListListItem>> GetReadingListAsync()
         {
             var readingList = await _context.ReadingLists
-                .Where(l => l.UserId == _userId)
+                .Where(l => l.UserId == _userId )
                 .Select(l => new ReadingListListItem()
             {
                     Id = l.Id,

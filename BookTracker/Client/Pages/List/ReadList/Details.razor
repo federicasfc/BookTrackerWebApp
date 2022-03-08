@@ -1,11 +1,10 @@
-﻿@page "/acquiredlist/remove/{ListItemId:int}"
-@using BookTracker.Shared.Models.List.AcquiredList
-@using BookTracker.Shared.Models.List.ReadingList
+﻿@page "/readlist/{ListItemId:int}"
+@using BookTracker.Shared.Models.List.ReadList
 @inject HttpClient http
 @inject NavigationManager navigation
 @attribute [Authorize]
 
-<h3>Remove From Acquired List</h3>
+<h3>Read List: @listItem.BookTitle</h3>
 
 @if(errorMessage != null)
 {
@@ -34,7 +33,7 @@
         <dd class = "col-sm-10">
             <span>@listItem.AddedUtc</span>
         </dd>
-        <dt class = "col-sm-2">
+         <dt class = "col-sm-2">
             <span>Date Acquired</span>
         </dt>
         <dd class = "col-sm-10">
@@ -52,15 +51,34 @@
         <dd class = "col-sm-10">
             <span>@listItem.HowAcquired</span>
         </dd>
-
+        <dt class = "col-sm-2">
+            <span>Date Started</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.StartedUtc</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Finished</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.IsFinished</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Review</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.Review</span>
+        </dd>
+            
         </dl>
-
-        <div class="d-flex justify-content-center mt-3">
-            <div class="text-center justify-content-between w-50">
-                <p>Are you sure you want to remove @listItem.BookTitle from Acquired List?</p>
-                <a href="#" @onclick="HandleClick" class="btn btn-danger text-white">Remove Book</a>
-                <a href=@($"/acquiredlist") class="btn btn-outline-primary">Back to Acquired List</a>
+         <div class="d-flex justify-content-center mt-3">
+            <div class="text-center justify-content-between w-25">
+                <a href=@($"/readlist/remove/{ListItemId}") class="btn btn-outline-danger">Remove from Read List</a>
+                <hr/>
+                @*Add link to book details here*@
+                <a href="/readlist">Back to Read List</a>
             </div>
+
         </div>
     </div>
     
@@ -77,7 +95,7 @@ else
     [Parameter]
     public int ListItemId { get; set; }
 
-    private AcquiredListDetail listItem = new();
+    private ReadListDetail listItem = new();
 
     
 
@@ -85,24 +103,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        listItem = await http.GetFromJsonAsync<AcquiredListDetail>($"/api/acquiredlist/{ListItemId}");
+        listItem = await http.GetFromJsonAsync<ReadListDetail>($"/api/readlist/{ListItemId}");
 
         
 
-    }
-
-    private async void HandleClick()
-    {
-        var removeResult = await http.DeleteAsync($"/api/acquiredlist/remove/{ListItemId}");
-
-        if(removeResult.IsSuccessStatusCode)
-        {
-            navigation.NavigateTo("/acquiredlist");
-        }
-        else
-        {
-            errorMessage = "Failed to remove book at this time.";
-        }
     }
 
 }

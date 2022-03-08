@@ -96,6 +96,29 @@ namespace BookTracker.Server.Controllers
 
         //AddFromReadingList
 
+        [HttpPut("add/readinglist/{id}")]
+
+        public async Task<IActionResult> AddFromReadingList(int id, ReadListEdit model)
+        {
+            if (!SetUserIdInService())
+                return Unauthorized();
+
+            if (!ModelState.IsValid || model is null)
+                return BadRequest(ModelState);
+
+            if (model.Id != id)
+                return BadRequest();
+
+            if (!await _readListService.AddToReadListFromReadingAsync(id, model))
+                return UnprocessableEntity();
+
+            return Ok("List item moved to Read List");
+
+
+        }
+
+        //AddFromAcquiredList
+
         [HttpPut("add/acquiredlist/{id}")]
 
         public async Task<IActionResult> AddFromAcquiredList(int id, ReadListFromAcquiredEdit model)
@@ -117,7 +140,7 @@ namespace BookTracker.Server.Controllers
 
         }
 
-        //Once add from Reading is built in service, also add here
+        
 
         //Delete
 

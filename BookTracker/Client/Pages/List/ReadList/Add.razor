@@ -55,10 +55,7 @@
         </div>
         <div class="form-group">
             <label>Have you finished reading?</label>
-            <InputSelect class="form-control" @bind-Value="model.IsFinished">
-                <option value="@ChangeToBool("yes")">Yes</option>
-                <option value="@ChangeToBool("no")">No</option>
-            </InputSelect>
+            <InputCheckbox class="form-control" @bind-Value="model.IsFinished"/>
         </div>
         <div class="form-group">
             <label>Review</label>

@@ -13,6 +13,20 @@ namespace BookTracker.Shared.Models.List.ReadList
 
         public int Id { get; set; }
 
+        public string BookTitle { get; set; }
+
+
+        public DateTimeOffset AddedUtc { get; set; }
+
+
+        
+        public DateTimeOffset AcquiredUtc { get; set; } //will need to figure out a way to set this manually on client side- because it shouldn't ncessarily be .Now
+
+
+        public Format Format { get; set; }
+
+        public string HowAcquired { get; set; }
+
 
         [Required]
 

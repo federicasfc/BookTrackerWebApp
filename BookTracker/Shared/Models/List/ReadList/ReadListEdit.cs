@@ -14,16 +14,10 @@ namespace BookTracker.Shared.Models.List.ReadList
 
         public int Id { get; set; }
 
-        //Not sure why I added these two here, but not deleting just in case I remember:
-
-        //[Required]  //keeping required for now, but might be wrong
-
-        //public int BookId { get; set; }
+        public string BookTitle { get; set; }
 
 
-        //[Required]
-
-        //public DateTimeOffset AddedUtc { get; set; }
+        public DateTimeOffset AddedUtc { get; set; }
 
 
         [Required]

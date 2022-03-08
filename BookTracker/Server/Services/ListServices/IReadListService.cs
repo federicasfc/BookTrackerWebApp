@@ -14,6 +14,8 @@ namespace BookTracker.Server.Services.ListServices
 
         Task<bool> UpdateReadListItemAsync(int id, ReadListEdit model);
 
+        Task<bool> AddToReadListFromReadingAsync(int id, ReadListEdit model);
+
         Task<bool> AddToReadListFromAcquiredAsync(int id, ReadListFromAcquiredEdit model);
 
         Task<bool> DeleteReadListItemAsync(int id);

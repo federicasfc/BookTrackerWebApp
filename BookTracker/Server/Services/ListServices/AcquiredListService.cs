@@ -136,7 +136,7 @@ namespace BookTracker.Server.Services.ListServices
 
 
 
-            return await _context.SaveChangesAsync() == 2;
+            return await _context.SaveChangesAsync() >= 1;
 
             //might be more complicated: may have to create a new AcquiredList and then remove the readingListItem from ReadingList
         }
