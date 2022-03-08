@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Shared\BookTracker.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\List\ReadList\" />
-  </ItemGroup>
-
 </Project>

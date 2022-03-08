@@ -1,5 +1,5 @@
-﻿@page "/readinglist/{ListItemId:int}"
-@using BookTracker.Shared.Models.List.ReadingList
+﻿@page "/acquiredlist/{ListItemId:int}"
+@using BookTracker.Shared.Models.List.AcquiredList
 @inject HttpClient http
 @inject NavigationManager navigation
 @attribute [Authorize]
@@ -22,12 +22,6 @@
             <span>@listItem.Id</span>
         </dd>
         <dt class = "col-sm-2">
-            <span>Book Id:</span>
-        </dt>
-        <dd class = "col-sm-10">
-            <span>@listItem.BookId</span>
-        </dd>
-        <dt class = "col-sm-2">
             <span>Book Title:</span>
         </dt>
         <dd class = "col-sm-10">
@@ -39,13 +33,32 @@
         <dd class = "col-sm-10">
             <span>@listItem.AddedUtc</span>
         </dd>
+         <dt class = "col-sm-2">
+            <span>Date Acquired</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.AcquiredUtc</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Format</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.Format</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>How Acquired</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.HowAcquired</span>
+        </dd>
             
         </dl>
          <div class="d-flex justify-content-center mt-3">
             <div class="text-center justify-content-between w-25">
-                <a href=@($"/readinglist/remove/{ListItemId}") class="btn btn-outline-danger">Remove from Reading List</a>
+                <a href=@($"/acquiredlist/remove/{ListItemId}") class="btn btn-outline-danger">Remove from Acquired List</a>
                 <hr/>
-                <a href="/readinglist">Back to Reading List</a>
+                @*Add link to book details here*@
+                <a href="/acquiredlist">Back to Acquired List</a>
             </div>
 
         </div>
@@ -64,7 +77,7 @@ else
     [Parameter]
     public int ListItemId { get; set; }
 
-    private ReadingListDetail listItem = new();
+    private AcquiredListDetail listItem = new();
 
     
 
@@ -72,7 +85,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        listItem = await http.GetFromJsonAsync<ReadingListDetail>($"/api/readinglist/{ListItemId}");
+        listItem = await http.GetFromJsonAsync<AcquiredListDetail>($"/api/acquiredlist/{ListItemId}");
 
         
 

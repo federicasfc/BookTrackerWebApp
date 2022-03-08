@@ -109,7 +109,7 @@ namespace BookTracker.Server.Controllers
                 return BadRequest();
 
             if (!await _acquiredListService.AddToAcquiredListFromReadingAsync(id, model))
-                return UnprocessableEntity();
+                return BadRequest();
 
             return Ok("List item moved to Acquired List");
 
