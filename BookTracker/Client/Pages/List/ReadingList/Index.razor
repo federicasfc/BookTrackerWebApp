@@ -1,0 +1,51 @@
+﻿@page "/readinglist"
+@using BookTracker.Shared.Models.List.ReadingList
+@inject HttpClient http
+@attribute [Authorize]
+
+
+<h3>Reading List</h3>
+
+<a href="/readinglist/add">Add Book to Reading List</a>
+
+@if(readingList != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Book Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(ReadingListListItem item in readingList)
+            {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.BookTitle</td>
+                <td>
+                    <a href=@($"readinglist/{item.Id}")>Details</a> ||
+                    <a href=@($"readinglist/remove/{item.Id}")>Remove</a> ||
+                    <a href=@($"acquiredlist/add/readinglist/{item.Id}")>Add to Acquired</a> ||
+                    <a href=@($"readlist/add/readinglist/{item.Id}")>Add to Read</a>
+                </td>
+            </tr>    
+            }
+        </tbody>
+    </table>
+    
+}
+else
+{
+    <p><em>Loading...</em></p>
+
+}
+
+@code {
+    private List<ReadingListListItem> readingList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        readingList = await http.GetFromJsonAsync<List<ReadingListListItem>>("api/readinglist");
+    }
+}

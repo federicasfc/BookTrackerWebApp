@@ -1,0 +1,112 @@
+﻿@page "/acquiredlist/edit/{ListItemId:int}"
+@using BookTracker.Shared.Models.List
+@using BookTracker.Shared.Models.List.AcquiredList
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3> Edit List Item </h3>
+
+@if (errorMessage is null)
+{
+
+        <div class="container">
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        <dl class="row">
+         <dt class = "col-sm-2">
+            <span>List Item Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span bind-Value="@model.Id">@model.Id</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Book Title:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span bind-Value="@model.BookTitle">@model.BookTitle</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Date Added:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span bind-Value="@model.AddedUtc">@model.AddedUtc</span>
+        </dd>
+            
+        </dl>
+
+            <div class="form-group">
+                <label>Date Acquired:</label>
+                <InputDate class="form-control" @bind-Value="model.AcquiredUtc" />
+
+            </div>
+            <div class="form-group">
+                <label>Format</label>
+                <InputSelect class="form-control" @bind-Value="model.Format">
+                    @foreach(var format in Enum.GetValues(typeof(Format)))
+                    {
+                        <option value="@format">@format</option>
+                        }
+                    </InputSelect>
+            </div>
+            <div class="form-group">
+                <label>How did you get this book?</label>
+                <InputTextArea class="form-control" @bind-Value="model.HowAcquired" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+
+        </EditForm>
+
+    </div>
+   
+}
+
+
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@code {
+
+
+    [Parameter]
+    
+    public int ListItemId { get; set; }
+
+
+    private AcquiredListEdit model = new();
+
+
+    private string errorMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await http.GetFromJsonAsync<AcquiredListEdit>($"/api/acquiredlist/{ListItemId}");
+    }
+
+
+    private async void HandleSubmit()
+    {
+        var editResult = await http.PutAsJsonAsync<AcquiredListEdit>($"/api/acquiredlist/edit/{ListItemId}", model);
+
+        if (editResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/acquiredlist");
+
+        }
+        else
+        {
+            errorMessage = "Could not edit list item at this time. Please try again later.";
+
+        }
+
+    }
+
+    }
+

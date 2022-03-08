@@ -2,6 +2,7 @@ using BookTracker.Server.Data;
 using BookTracker.Server.Models;
 using BookTracker.Server.Services.BookServices;
 using BookTracker.Server.Services.GenreServices;
+using BookTracker.Server.Services.ListServices;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,10 @@ namespace BookTracker.Server
 
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<IReadingListService, ReadingListService>();
+            services.AddScoped<IAcquiredListService, AcquiredListService>();
+            services.AddScoped<IReadListService, ReadListService>();
+
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

@@ -1,0 +1,80 @@
+﻿@page "/readinglist/add"
+@using BookTracker.Shared.Models.List.ReadingList
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Add a Book to Reading List</h3>
+
+@if (errorMessage is null)
+{
+    if(books == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        
+    <div class="container">
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+              <div class="form-group">
+                <label>Book</label>
+                <InputSelect class="form-control" @bind-Value="model.BookId">
+                    @foreach (BookListItem book in books)
+                    {
+                    <option value="@book.Id">@book.Title</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+
+        </EditForm>
+
+    </div>
+    }
+
+
+}
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@code {
+
+    private ReadingListCreate model = new();
+
+    private List<BookListItem> books;
+
+    private string errorMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await http.GetFromJsonAsync<List<BookListItem>>("/api/book/");
+    }
+
+
+    private async void HandleSubmit()
+    {
+        var createResult = await http.PostAsJsonAsync<ReadingListCreate>("/api/readinglist/add", model);
+
+        if (createResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/readinglist");
+
+        }
+        else
+        {
+            errorMessage = "Could not add book at this time. Please try again later.";
+
+        }
+
+    }
+
+    }

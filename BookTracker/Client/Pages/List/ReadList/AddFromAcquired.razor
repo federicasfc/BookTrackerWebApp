@@ -1,0 +1,120 @@
+﻿@page "/readlist/add/acquiredlist/{ListItemId:int}"
+@using BookTracker.Shared.Models.List
+@using BookTracker.Shared.Models.List.ReadList
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3> Move to Read List </h3>
+
+@if (errorMessage is null)
+{
+
+        <div class="container">
+        <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        <dl class="row">
+         <dt class = "col-sm-2">
+            <span>List Item Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span bind-Value="@model.Id">@model.Id</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Book Title:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span bind-Value="@model.BookTitle">@model.BookTitle</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Date Added:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span bind-Value="@model.AddedUtc">@model.AddedUtc</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Date Acquired</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@model.AcquiredUtc</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Format</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@model.Format</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>How Acquired</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@model.HowAcquired</span>
+        </dd>
+            
+        </dl>
+        <div class="form-group">
+            <label>Date Started: </label>
+            <InputDate class="form-control" @bind-Value="model.StartedUtc" />
+        </div>
+        <div class="form-group">
+            <label>Have you finished reading?</label>
+            <InputCheckbox class="form-control" @bind-Value="model.IsFinished"/>
+        </div>
+        <div class="form-group">
+            <label>Review</label>
+            <InputNumber class="form-control" @bind-Value="model.Review"></InputNumber>
+        </div>
+
+            <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+          </EditForm>
+</div>      
+   
+}
+
+
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@code {
+
+
+    [Parameter]
+    
+    public int ListItemId { get; set; }
+
+
+    private ReadListFromAcquiredEdit model = new();
+
+
+    private string errorMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await http.GetFromJsonAsync<ReadListFromAcquiredEdit>($"/api/acquiredlist/{ListItemId}");
+    }
+
+
+    private async void HandleSubmit()
+    {
+        var editResult = await http.PutAsJsonAsync<ReadListFromAcquiredEdit>($"/api/readlist/add/acquiredlist/{ListItemId}", model);
+
+        if (editResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/readlist");
+
+        }
+        else
+        {
+            errorMessage = "Could not move list item at this time. Please try again later.";
+
+        }
+
+    }
+
+    }

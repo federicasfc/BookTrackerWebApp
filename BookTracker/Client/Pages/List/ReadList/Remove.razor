@@ -1,0 +1,127 @@
+﻿
+@page "/readlist/remove/{ListItemId:int}"
+@using BookTracker.Shared.Models.List.ReadList
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Remove From Acquired List</h3>
+
+@if(errorMessage != null)
+{
+    <h2 class="text-danger">@errorMessage</h2>
+}
+
+@if(listItem != null)
+{
+
+<div class="container">
+        <dl class="row">
+         <dt class = "col-sm-2">
+            <span>List Item Id:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.Id</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Book Title:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.BookTitle</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Date Added:</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.AddedUtc</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Date Acquired</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.AcquiredUtc</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Format</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.Format</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>How Acquired</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.HowAcquired</span>
+        </dd>
+        <dt class = "col-sm-2">
+            <span>Date Started</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.StartedUtc</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Finished</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.IsFinished</span>
+        </dd>
+         <dt class = "col-sm-2">
+            <span>Review</span>
+        </dt>
+        <dd class = "col-sm-10">
+            <span>@listItem.Review</span>
+        </dd>
+        </dl>
+
+         <div class="d-flex justify-content-center mt-3">
+            <div class="text-center justify-content-between w-50">
+                <p>Are you sure you want to remove @listItem.BookTitle from Read List?</p>
+                <a href="#" @onclick="HandleClick" class="btn btn-danger text-white">Remove Book</a>
+                <a href=@($"/readlist") class="btn btn-outline-primary">Back to Read List</a>
+            </div>
+        </div>
+    </div>
+    
+}
+else
+{
+    <p>Item not found</p>
+}
+
+
+@code {
+
+
+    [Parameter]
+    public int ListItemId { get; set; }
+
+    private ReadListDetail listItem = new();
+
+    
+
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listItem = await http.GetFromJsonAsync<ReadListDetail>($"/api/readlist/{ListItemId}");
+
+        
+
+    }
+
+    private async void HandleClick()
+    {
+        var removeResult = await http.DeleteAsync($"/api/readlist/remove/{ListItemId}");
+
+        if(removeResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/readlist");
+        }
+        else
+        {
+            errorMessage = "Failed to remove book at this time.";
+        }
+    }
+
+}
+

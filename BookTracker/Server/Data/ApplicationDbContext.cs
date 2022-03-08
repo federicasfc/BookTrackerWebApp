@@ -24,6 +24,10 @@ namespace BookTracker.Server.Data
 
         public DbSet<ReadingList> ReadingLists { get; set; }
 
+        public DbSet<AcquiredList> AcquiredLists { get; set; }
+
+        public DbSet<ReadList> ReadLists { get; set; } 
+
 
 
 

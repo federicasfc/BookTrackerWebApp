@@ -1,0 +1,128 @@
+﻿@page "/readlist/add"
+@using BookTracker.Shared.Models.List
+@using BookTracker.Shared.Models.List.ReadList
+@using BookTracker.Shared.Models.Book
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Add a Book to Read List</h3>
+
+@if (errorMessage is null)
+{
+    if (books == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+
+        <div class="container">
+            <EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="form-group">
+                    <label>Book</label>
+                    <InputSelect class="form-control" @bind-Value="model.BookId">
+                        @foreach (BookListItem book in books)
+                        {
+                    <option value="@book.Id">@book.Title</option>
+                        }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label>Date Acquired:</label>
+            <InputDate class="form-control" @bind-Value="model.AcquiredUtc" />
+
+        </div>
+        <div class="form-group">
+            <label>Format</label>
+            <InputSelect class="form-control" @bind-Value="model.Format">
+                @foreach (var format in Enum.GetValues(typeof(Format)))
+                        {
+                    <option value="@format">@format</option>
+                        }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label>How did you get this book?</label>
+            <InputTextArea class="form-control" @bind-Value="model.HowAcquired" />
+        </div>
+        <div class="form-group">
+            <label>Date Started: </label>
+            <InputDate class="form-control" @bind-Value="model.StartedUtc" />
+        </div>
+        <div class="form-group">
+            <label>Have you finished reading?</label>
+            <InputCheckbox class="form-control" @bind-Value="model.IsFinished"/>
+        </div>
+        <div class="form-group">
+            <label>Review</label>
+            <InputNumber class="form-control" @bind-Value="model.Review"></InputNumber>
+        </div>
+
+
+        <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+
+
+    </EditForm>
+
+</div>
+    }
+
+
+}
+else
+{
+    <h5 class="text-danger">@errorMessage</h5>
+}
+
+@code {
+
+    private ReadListCreate model = new();
+
+    private List<BookListItem> books;
+
+    private string errorMessage;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await http.GetFromJsonAsync<List<BookListItem>>("/api/book/");
+    }
+
+
+    private async void HandleSubmit()
+    {
+        var createResult = await http.PostAsJsonAsync<ReadListCreate>("/api/readlist/add", model);
+
+        if (createResult.IsSuccessStatusCode)
+        {
+            navigation.NavigateTo("/readlist");
+
+        }
+        else
+        {
+            errorMessage = "Could not add book at this time. Please try again later.";
+
+        }
+
+    }
+    private bool ChangeToBool(string value)
+    {
+
+        if (value == "yes")
+        {
+            return model.IsFinished = true;
+        }
+        else
+        {
+            return  model.IsFinished = false;
+        }
+        
+
+    }
+
+
+    }
