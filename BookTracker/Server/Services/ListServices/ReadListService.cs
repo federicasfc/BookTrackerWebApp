@@ -55,6 +55,7 @@ namespace BookTracker.Server.Services.ListServices
             var detail = new ReadListDetail()
             {
                 Id = readListItem.Id,
+                BookId = readListItem.BookId,
                 BookTitle = readListItem.Book.Title,
                 StartedUtc = readListItem.StartedUtc,
                 AddedUtc = readListItem.AddedUtc,

@@ -54,6 +54,7 @@ namespace BookTracker.Server.Services.ListServices
             var detail = new AcquiredListDetail()
             {
                 Id = acquiredListItem.Id,
+                BookId = acquiredListItem.BookId,
                 BookTitle = acquiredListItem.Book.Title,
                 AddedUtc = acquiredListItem.AddedUtc,
                 AcquiredUtc = acquiredListItem.AcquiredUtc,
