@@ -1,5 +1,6 @@
 ﻿@page "/book/edit/{BookId:int}"
 @using BookTracker.Shared.Models.Book
+@using BookTracker.Shared.Models.Genre
 @inject HttpClient http
 @inject NavigationManager navigation
 @attribute [Authorize]
@@ -25,6 +26,39 @@
                 <label>Description</label>
                 <InputTextArea class="form-control" @bind-Value="model.Description" />
             </div>
+            <div class="form-group">
+                <h4>Genres</h4>
+                @* Need some type of logic to show if genres already exist in model.Genres and are checked; right now this will just display all genres with empty checks regardless of whether or not they are in model.Genres*@
+                @foreach (GenreListItem genre in genres)
+                {
+                    //Doing the same logic as if below, but directly utilizing checked input property by setting it equal to either true or false
+                    //bool is checking whether or not model.Genres contains a genre with an id that matches the id of 
+                    bool isChecked = model.Genres.Any(g => g.Id == genre.Id);
+
+                    <label for="@genre.Id">@genre.Name </label>
+                    <input type="checkbox" class="form-control" id="@genre.Id" @onchange="eventArgs => {CheckboxClicked(genre, eventArgs.Value); }" checked="@isChecked"/>
+
+                   @* @if (model.Genres.Any(g => g.Id == genre.Id))
+                    {
+                        <input type="checkbox" class="form-control" id="@genre.Id" @onchange="eventArgs => {CheckboxClicked(genre, eventArgs.Value); }" checked />
+                       
+                        Source for possible solution: https://blazor-tutorial.net/knowledge-base/51234654/-net-core-blazor--how-to-get-the-checkbox-value-if-it-is-checked-
+
+
+                    }
+                    else
+                    {
+                        <label for="@genre.Id">@genre.Name </label>
+                        <input type="checkbox" class="form-control" id="@genre.Id" @onchange="eventArgs => {CheckboxClicked(genre, eventArgs.Value); }" />
+                        
+
+
+                    }
+                    *@
+                }
+            </div>
+
+
 
             <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
 
@@ -49,12 +83,16 @@ else
 
     private BookUpdate model = new();
 
+    private List<GenreListItem> genres = new();
+
     private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        //This isn't working for some reason, may have to do with Detail view not existing yet?
+
         model = await http.GetFromJsonAsync<BookUpdate>($"/api/book/{BookId}");
+
+        genres = await http.GetFromJsonAsync<List<GenreListItem>>("/api/genre");
 
     }
 
@@ -69,6 +107,34 @@ else
         else
         {
             errorMessage = "Could not edit book at this time. Please try again later.";
+        }
+    }
+
+
+    private void CheckboxClicked(GenreListItem genre, object checkedValue)
+    {
+        //If checked and model doesn't have genre, add it
+        if ((bool)checkedValue)
+        {
+
+            if (!model.Genres.Any(g => g.Id == genre.Id))
+            {
+                model.Genres.Add(genre);
+
+            }
+
+
+        }
+        //if not checked and model already has it, remove it
+        else
+        {
+            if (model.Genres.Any(g => g.Id == genre.Id))
+            {
+                var genreToRemove = model.Genres.FirstOrDefault(g => g.Id == genre.Id);
+
+                model.Genres.Remove(genreToRemove);
+
+            }
         }
     }
 
@@ -93,4 +159,14 @@ else
     <option> @genre.Name</option>
     }
     </InputSelect>
-    -->*@
+
+    <InputCheckbox class="form-control" @bind-Value="model.Genres"> @*Won't let me use this because of list probably?? May need a foreach, but I'm not sure where*@
+                  @* Original code under Label
+    @foreach (GenreListItem genre in genres)
+    {
+    <option value="@genre.Id">@genre.Name</option>
+    }
+    </InputCheckbox>
+
+                  *@
+

@@ -30,7 +30,7 @@ namespace BookTracker.Server.Services.BookServices
         {
             var books = await _context.Books
                 .Select(b => new BookListItem()
-                { 
+                {
                     Id = b.Id,
                     Title = b.Title,
                     Author = b.Author
@@ -57,7 +57,7 @@ namespace BookTracker.Server.Services.BookServices
                 Description = bookEntity.Description,
                 Genres = bookEntity.Genres.Select(g => new GenreListItem()
                 {
-                   // Id = g.Id,
+                    Id = g.Id,
                     Name = g.Name
 
                 }).ToList()
@@ -78,11 +78,19 @@ namespace BookTracker.Server.Services.BookServices
             {
                 Title = model.Title,
                 Author = model.Author,
+                Description = model.Description ?? null,
+
             };
 
             _context.Books.Add(bookEntity);
 
-            return await _context.SaveChangesAsync() == 1;
+            bookEntity.Genres = model.Genres.Select(g => new Genre()
+            {
+                Id = g.Id,
+                Name = g.Name
+            }).ToList();
+
+            return await _context.SaveChangesAsync() >= 1;
 
         }
 
@@ -97,34 +105,62 @@ namespace BookTracker.Server.Services.BookServices
             if (model.Id != id)
                 return false;
 
-            var bookEntity = await _context.Books.FindAsync(id);
+            var bookEntity = await _context.Books.Include(b => b.Genres).FirstOrDefaultAsync(b => b.Id == id);
 
             if (bookEntity is null)
                 return false;
 
             //depending on how front-end input works, may need to add extra logic here so that not everything has to be updated
             bookEntity.Title = model.Title;
-            bookEntity.Author = model.Author;   
+            bookEntity.Author = model.Author;
             bookEntity.Description = model.Description;
 
-            return await _context.SaveChangesAsync() == 1;
 
-           
-        }
+            foreach (GenreListItem genre in model.Genres)
+            {
 
-        //Delete
+                if (!bookEntity.Genres.Any(g => g.Id == genre.Id))
+                {
+                    bookEntity.Genres.Add(new Genre()
+                    {
+                        Id = genre.Id,
+                        Name = genre.Name
+                    }
+                   );
+                }
+            }
 
-        public async Task<bool> DeleteBookAsync(int id)
-        {
-            var bookToDelete = await _context.Books.FindAsync(id);
 
-            if (bookToDelete is null)
-                return false;
+            //g = Genre entity that exists in BookEntity
+            //r = GenreListItem that exists in model.Genres
+            var genresToRemove = bookEntity.Genres.Where(g => !model.Genres.Any(r => r.Id == g.Id)).ToList();
+            foreach(Genre genreToRemove in genresToRemove)
+            {
+                bookEntity.Genres.Remove(genreToRemove);
+            }
 
-            _context.Books.Remove(bookToDelete);
+                
 
-            return await _context.SaveChangesAsync() == 1;
-           
+                //foreach bookentity.Genres use some type of Linq query (find) model.Genres and add them with   .Add
+
+                return await _context.SaveChangesAsync() >= 1;
+
+
+            } //works with genre
+
+            //Delete
+
+            public async Task<bool> DeleteBookAsync(int id)
+            {
+                var bookToDelete = await _context.Books.FindAsync(id);
+
+                if (bookToDelete is null)
+                    return false;
+
+                _context.Books.Remove(bookToDelete);
+
+                return await _context.SaveChangesAsync() == 1;
+
+            }
         }
     }
-}

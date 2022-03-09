@@ -1,5 +1,6 @@
 ﻿@page "/book/create"
 @using BookTracker.Shared.Models.Book
+@using BookTracker.Shared.Models.Genre
 @inject HttpClient http
 @inject NavigationManager navigation
 @attribute [Authorize]
@@ -25,15 +26,14 @@
                 <InputTextArea class="form-control" @bind-Value="model.Description" />
             </div>
 
-            @*<!--
-                After some genres are created:
-               <InputSelect class="form-control" @bind-Value="model.Genres"
-                   @foreach (GenreListItem genre in genres)
-                   {
-                   <option> @genre.Name</option>
-                   }
-                </InputSelect>
-            -->*@
+            <div class="form-group">
+                <label>Genres</label>
+                @foreach (GenreListItem genre in genres)
+                {
+                    <input type="checkbox" class="form-control" @onchange="eventArgs => {CheckboxClicked(genre, eventArgs.Value); }" />
+                    <p>@genre.Name</p>
+                }
+            </div>
 
             <button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
 
@@ -53,16 +53,16 @@ else
 
     private BookCreate model = new();
 
-    //private List<GenreListItem> genres;
+    private List<GenreListItem> genres = new();
 
     private string errorMessage;
 
-    /*
-     * protected override async Task OnInitialized()
-     * {
-     *      genres = await http.GetFromJsonAsync<IEnumerable<GenreListItem>>("/api/genre/");
-     * }
-     */
+    
+     protected override async Task OnInitializedAsync()
+      {
+           genres = await http.GetFromJsonAsync<List<GenreListItem>>("/api/genre/");
+      }
+     
 
     private async void HandleSubmit()
     {
@@ -80,12 +80,30 @@ else
         }
 
     }
+    private  void CheckboxClicked(GenreListItem genre, object checkedValue)
+    {
+        //If checked and model doesn't have genre, add it
+        if ((bool)checkedValue)
+        {
 
-}
-    @*<!--After some genres are created:
-                Add a checkbox function that allows users to click on applicable genres;
-                -InputSelect will need to be added
-                -List<GenreListItem> genres field will need to be added in code section
-                -List<GenreListItem> will have to be added as prop in BookCreate model
-                -OnInitializedAsync will have to get genres list
-            --> *@
+            if (!model.Genres.Contains(genre))
+            {
+                model.Genres.Add(genre);
+
+            }
+
+
+        }
+        //if not checked and model already has it, remove it
+        else
+        {
+            if (model.Genres.Contains(genre))
+            {
+                model.Genres.Remove(genre);
+            }
+        }
+
+    }
+    }
+   
+     @*Source for possible solution for genre checkbox function: https://blazor-tutorial.net/knowledge-base/51234654/-net-core-blazor--how-to-get-the-checkbox-value-if-it-is-checked-*@

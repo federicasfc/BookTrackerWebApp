@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookTracker.Shared.Models.Genre;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -25,5 +26,8 @@ namespace BookTracker.Shared.Models.Book
         public string Description { get; set; }
 
         //may want to add logic in update service method that makes these not required; waiting to see how things play out with the front end first
+
+
+        public List<GenreListItem> Genres { get; set; } = new();
     }
 }
