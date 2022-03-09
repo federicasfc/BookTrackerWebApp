@@ -22,7 +22,7 @@ namespace BookTracker.Shared.Models.List.AcquiredList
 
 
         [Required]
-        public DateTimeOffset AcquiredUtc { get; set; } //will need to figure out a way to set this manually on client side- because it shouldn't ncessarily be .Now
+        public DateTimeOffset AcquiredUtc { get; set; } = DateTimeOffset.Now;
 
         [Required]
 

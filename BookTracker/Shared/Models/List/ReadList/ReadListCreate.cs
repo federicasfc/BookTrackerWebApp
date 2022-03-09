@@ -20,7 +20,7 @@ namespace BookTracker.Shared.Models.List.ReadList
 
 
         [Required]
-        public DateTimeOffset AcquiredUtc { get; set; } //will need to figure out a way to set this manually on client side- because it shouldn't ncessarily be .Now
+        public DateTimeOffset AcquiredUtc { get; set; } = DateTimeOffset.Now; 
 
         [Required]
 
@@ -30,7 +30,7 @@ namespace BookTracker.Shared.Models.List.ReadList
 
         [Required]
 
-        public DateTimeOffset StartedUtc { get; set; }
+        public DateTimeOffset StartedUtc { get; set; } = DateTimeOffset.Now;
 
         [Required]
 
@@ -39,5 +39,10 @@ namespace BookTracker.Shared.Models.List.ReadList
         [Range(1, 5, ErrorMessage = "Number must be between 1 and 5")]
 
         public int Review { get; set; }
+   
+
+
+                
+         
     }
 }

@@ -21,7 +21,7 @@ namespace BookTracker.Shared.Models.List.AcquiredList
         public DateTimeOffset AddedUtc { get; set; }
 
         [Required]
-        public DateTimeOffset AcquiredUtc { get; set; }
+        public DateTimeOffset AcquiredUtc { get; set; } = DateTimeOffset.Now;
 
         [Required]
 

@@ -30,7 +30,7 @@ namespace BookTracker.Shared.Models.List.ReadList
 
         [Required]
 
-        public DateTimeOffset StartedUtc { get; set; }
+        public DateTimeOffset StartedUtc { get; set; } = DateTimeOffset.Now;
 
         [Required]
 
