@@ -101,7 +101,7 @@ namespace BookTracker.Server.Services.BookServices
             if (model is null)
                 return false;
 
-            //not sure if fully necessary, but leaving for now
+            
             if (model.Id != id)
                 return false;
 
@@ -110,12 +110,11 @@ namespace BookTracker.Server.Services.BookServices
             if (bookEntity is null)
                 return false;
 
-            //depending on how front-end input works, may need to add extra logic here so that not everything has to be updated
             bookEntity.Title = model.Title;
             bookEntity.Author = model.Author;
             bookEntity.Description = model.Description;
 
-
+            //For adding genres that don't exist in bookentity but do exist in model
             foreach (GenreListItem genre in model.Genres)
             {
 
@@ -130,18 +129,21 @@ namespace BookTracker.Server.Services.BookServices
                 }
             }
 
+            //For removing books that exist in BookEntity but don't exist in model(got unchecked):
 
+            //So setting genresToRemove equal to whatever genres that exist in BookEntity that do not have an Id that matches the id of a genre in model.Genres
             //g = Genre entity that exists in BookEntity
             //r = GenreListItem that exists in model.Genres
+
             var genresToRemove = bookEntity.Genres.Where(g => !model.Genres.Any(r => r.Id == g.Id)).ToList();
+
+            //Then, foreaching through the list genresToRemove and removing the individual genres from bookEntity.Genres
+            //extra list genresToRemove is necessary because foreach looping doesn't allow for the collection to be modified while it is being looped through
+
             foreach(Genre genreToRemove in genresToRemove)
             {
                 bookEntity.Genres.Remove(genreToRemove);
             }
-
-                
-
-                //foreach bookentity.Genres use some type of Linq query (find) model.Genres and add them with   .Add
 
                 return await _context.SaveChangesAsync() >= 1;
 
