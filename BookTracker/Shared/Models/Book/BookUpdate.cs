@@ -28,6 +28,6 @@ namespace BookTracker.Shared.Models.Book
         //may want to add logic in update service method that makes these not required; waiting to see how things play out with the front end first
 
 
-        public List<GenreListItem> Genres { get; set; }
+        public List<GenreListItem> Genres { get; set; } = new();
     }
 }

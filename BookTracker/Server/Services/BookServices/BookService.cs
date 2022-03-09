@@ -30,7 +30,7 @@ namespace BookTracker.Server.Services.BookServices
         {
             var books = await _context.Books
                 .Select(b => new BookListItem()
-                { 
+                {
                     Id = b.Id,
                     Title = b.Title,
                     Author = b.Author
@@ -57,7 +57,7 @@ namespace BookTracker.Server.Services.BookServices
                 Description = bookEntity.Description,
                 Genres = bookEntity.Genres.Select(g => new GenreListItem()
                 {
-                   // Id = g.Id,
+                    Id = g.Id,
                     Name = g.Name
 
                 }).ToList()
@@ -78,11 +78,19 @@ namespace BookTracker.Server.Services.BookServices
             {
                 Title = model.Title,
                 Author = model.Author,
+                Description = model.Description ?? null,
+
             };
 
             _context.Books.Add(bookEntity);
 
-            return await _context.SaveChangesAsync() == 1;
+            bookEntity.Genres = model.Genres.Select(g => new Genre()
+            {
+                Id = g.Id,
+                Name = g.Name
+            }).ToList();
+
+            return await _context.SaveChangesAsync() >= 1;
 
         }
 
@@ -104,46 +112,55 @@ namespace BookTracker.Server.Services.BookServices
 
             //depending on how front-end input works, may need to add extra logic here so that not everything has to be updated
             bookEntity.Title = model.Title;
-            bookEntity.Author = model.Author;   
+            bookEntity.Author = model.Author;
             bookEntity.Description = model.Description;
-           /*
-            foreach (Genre genre in bookEntity.Genres) //might be mad because no genres are currently associated??
+
+
+            foreach (GenreListItem genre in model.Genres)
             {
-                _context.Genres.Find(g => g.Id == id).ToList().Add(genre);
+
+                if (!bookEntity.Genres.Any(g => g.Id == genre.Id))
+                {
+                    bookEntity.Genres.Add(new Genre()
+                    {
+                        Id = genre.Id,
+                        Name = genre.Name
+                    }
+                   );
+                }
             }
-            bookEntity.Genres = model.Genres.Select(g => new Genre()
+
+
+            //g = Genre entity that exists in BookEntity
+            //r = GenreListItem that exists in model.Genres
+            var genresToRemove = bookEntity.Genres.Where(g => !model.Genres.Any(r => r.Id == g.Id)).ToList();
+            foreach(Genre genreToRemove in genresToRemove)
             {
-                Id = g.Id,
-                Name = g.Name
-            }).ToList();
-            //foreach bookentity.Genres use some type of Linq query (find) model.Genres and add them with   .Add
-           */
-            return await _context.SaveChangesAsync() == 1;
+                bookEntity.Genres.Remove(genreToRemove);
+            }
 
-           
-        }
+                
 
-        //Delete
+                //foreach bookentity.Genres use some type of Linq query (find) model.Genres and add them with   .Add
 
-        public async Task<bool> DeleteBookAsync(int id)
-        {
-            var bookToDelete = await _context.Books.FindAsync(id);
+                return await _context.SaveChangesAsync() >= 1;
 
-            if (bookToDelete is null)
-                return false;
 
-            _context.Books.Remove(bookToDelete);
+            } //works with genre
 
-            return await _context.SaveChangesAsync() == 1;
-           
+            //Delete
+
+            public async Task<bool> DeleteBookAsync(int id)
+            {
+                var bookToDelete = await _context.Books.FindAsync(id);
+
+                if (bookToDelete is null)
+                    return false;
+
+                _context.Books.Remove(bookToDelete);
+
+                return await _context.SaveChangesAsync() == 1;
+
+            }
         }
     }
-}
-/*
- * bookEntity.Genres = model.Genres.Select(g => new Genre()
-            {
-                Id = g.Id,
-                Name = g.Name
-            }).ToList();
- * 
- */

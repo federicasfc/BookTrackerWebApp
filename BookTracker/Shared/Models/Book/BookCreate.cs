@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BookTracker.Shared.Models.Genre;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,6 @@ namespace BookTracker.Shared.Models.Book
 
         public string Description { get; set; }
 
-        //Potentially: public List<GenreListItem> Genres {get; set;} on User end, want to be able to check applicable genres and apply to book-- 
+        public List<GenreListItem> Genres { get; set; } = new(); 
     }
 }
