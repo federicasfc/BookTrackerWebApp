@@ -10,7 +10,7 @@ namespace BookTracker.Server.Services.GenreServices
 
         Task<GenreDetail> GetGenreByIdAsync(int id);
 
-        Task<GenreBooksListItem> GetBooksByGenreAsync(int id);
+        //Task<GenreBooksListItem> GetBooksByGenreAsync(int id);
 
         Task<bool> CreateGenreAsync(GenreCreate model);
 
