@@ -1,0 +1,56 @@
+﻿@page "/genre/booklist/{GenreId:int}"
+@using BookTracker.Shared.Models.Genre
+@inject HttpClient http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+<h3>Books By Genre </h3>
+
+
+@if(books != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Genre Id</th>
+                <th>Book Id</th>
+                <th>Title</th>
+                <th>Author</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(GenreBooksListItem book in books)
+            {
+            <tr>
+                <td>@book.Id</td>
+                <td>@book.BookId</td>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>
+                    <a href=@($"book/{book.BookId}")> Book Details</a>
+                </td>
+            </tr>    
+            }
+        </tbody>
+    </table>
+    
+}
+else
+{
+    <p><em>Loading...</em></p>
+
+}
+
+@code {
+
+    [Parameter]
+
+    public int GenreId { get; set; }
+
+    private List<GenreBooksListItem> books;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await http.GetFromJsonAsync<List<GenreBooksListItem>>($"api/genre/booklist/{GenreId}");
+    }
+}

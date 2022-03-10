@@ -22,7 +22,7 @@ namespace BookTracker.Shared.Models.Book
 
         public string Author { get; set; }
 
-        [Required]
+        
         public string Description { get; set; }
 
         //may want to add logic in update service method that makes these not required; waiting to see how things play out with the front end first
