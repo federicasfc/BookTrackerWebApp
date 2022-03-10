@@ -4,31 +4,30 @@
 @inject NavigationManager navigation
 @attribute [Authorize]
 
-<h3>Books</h3>
+<h3>Books By Genre </h3>
 
-<a href="/book/create">Create a Book</a>
 
 @if(books != null)
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Genre Id</th>
+                <th>Book Id</th>
                 <th>Title</th>
                 <th>Author</th>
             </tr>
         </thead>
         <tbody>
-            @foreach(BookListItem book in books)
+            @foreach(GenreBooksListItem book in books)
             {
             <tr>
                 <td>@book.Id</td>
+                <td>@book.BookId</td>
                 <td>@book.Title</td>
                 <td>@book.Author</td>
                 <td>
-                    <a href=@($"book/{book.Id}")>Details</a>
-                    <a href=@($"book/edit/{book.Id}")>Edit</a>
-                    <a href=@($"book/delete/{book.Id}")>Delete</a>
+                    <a href=@($"book/{book.BookId}")> Book Details</a>
                 </td>
             </tr>    
             }

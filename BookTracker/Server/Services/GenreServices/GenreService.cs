@@ -59,8 +59,8 @@ namespace BookTracker.Server.Services.GenreServices
         }
 
         //GetBooksByGenre
-         /*
-     public async Task<GenreBooksListItem> GetBooksByGenreAsync(int id) //genreId? maybe better?
+         
+     public async Task<IEnumerable<GenreBooksListItem>> GetBooksByGenreAsync(int id) //genreId? maybe better?
         {
             var genreEntity = await _context.Genres
                .Include(g => g.Books)
@@ -68,38 +68,19 @@ namespace BookTracker.Server.Services.GenreServices
 
             if(genreEntity is null)
                 return null;
-            
-            var booksByGenre = new GenreBooksListItem()
-                {
-                Books = genreEntity.Books.Select(e => new BookListItem()
-                {
-                    Id = e.Id,
-                    Title = e.Title,
-                    Author = e.Author
 
-                }).ToList()
-                };
-                 
-                return booksByGenre;
-        } */
-
-        /*
-        public async Task<GenreBooksListItem> GetBooksByGenreAsync(int id)
-        {
-            var genreEntity = await _context.Genres
-                .Include(g => g.Books)
-                .FirstOrDefaultAsync(e => e.Id == id);
-
-            if (genreEntity is null)
-                return null;
-
-            var booksByGenre = new GenreBooksListItem()
+            var booksByGenre = genreEntity.Books.Select(b => new GenreBooksListItem()
             {
-                Books = genreEntity.Books.Where(b )
-            }
-        }
-        */
+                Id = genreEntity.Id,
+                Name = genreEntity.Name,
+                BookId = b.Id,
+                Title = b.Title,
+                Author = b.Author
 
+            }).ToList();
+
+            return booksByGenre;
+        } 
 
         //Create
 
