@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace BookTracker.Shared.Models.Genre
 {
-   public class GenreBooksListItem
+    public class GenreBooksListItem
     {
+        
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -18,5 +19,6 @@ namespace BookTracker.Shared.Models.Genre
         public string Author { get; set; }
         
         //public List<BookListItem> Books {get; set;} 
+    
     }
-}
+        }

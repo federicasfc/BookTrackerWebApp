@@ -6,17 +6,28 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-image: url("https://images.unsplash.com/photo-1601662528567-526cd06f6582?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8cGFwZXIlMjBiYWNrZ3JvdW5kfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=1000&q=60");
     color: #d7563e
+    
 }
 
+.index-text {
+    text-align: center;
+
+
+}
 .table {
     border-radius: 4px;
     border: solid 1px lightslategray;
     color: darkslategrey;
+    box-shadow: 3px 4px 15px #b6adad;
+   
 }
 a, .btn-link {
-    color: #5099a9;
+    color: #34677e;
 }
 
+.top-row a, .btn-link, .nav-link {
+    color: #f5f1f1;
+}
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
